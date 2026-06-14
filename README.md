@@ -1,57 +1,64 @@
 # LINE Auto Helper
 
-LINE Auto Helper 是一個可部署、可維護的 LINE Messaging API 自動化服務。它不是只做 echo 的範例，而是把 webhook、規則檔、自動廣播、健康檢查、管理 API 和 GitHub Actions 放在同一個可長期維護的專案裡。
+Small LINE Messaging API service for a personal or small-team LINE official account.
 
-## 功能
+The repo is intentionally boring: one Express app, one JSON rules file, a few operational endpoints, and GitHub Actions for checks and scheduled broadcasts. It is meant to be easy to inspect after a few months away.
 
-- LINE webhook 自動回覆
-- `data/replies.json` 關鍵字規則
-- 新好友加入歡迎訊息
-- `/ping`、`/rules`、`選單` 指令
-- `/healthz` 與 `/readyz` 部署健康檢查
-- 受 `ADMIN_TOKEN` 保護的 `/admin/metrics`
-- 受 `ADMIN_TOKEN` 保護的 `/admin/broadcast`
-- 結構化 JSON logs，預設不記錄使用者訊息文字
-- GitHub Actions CI、規則檔驗證、排程 LINE 廣播
-- Docker 與 Render 部署範本
+## Current Shape
 
-## 快速開始
+What it does today:
+
+- receives LINE webhook events at `POST /webhook`
+- replies to text messages from `data/replies.json`
+- sends a welcome message on follow
+- exposes `/healthz` and `/readyz` for deployment checks
+- exposes `/admin/metrics` and `/admin/broadcast` behind `ADMIN_TOKEN`
+- runs CI for syntax, reply-rule validation, and tests
+- can send a scheduled weekly LINE broadcast from GitHub Actions
+
+What it deliberately does not do yet:
+
+- no database
+- no user profile storage
+- no dashboard UI
+- no per-user segmentation
+- in-memory metrics reset when the process restarts
+
+That keeps the first version maintainable. If the bot starts handling real customer workflows, add persistent storage before adding more complicated automations.
+
+## Setup
 
 ```bash
 npm install
 cp .env.example .env
-npm run validate:env
-npm run validate:rules
+npm run validate
 npm start
 ```
 
-`.env` 至少要填：
+Fill `.env`:
 
 ```bash
-LINE_CHANNEL_ACCESS_TOKEN=你的 channel access token
-LINE_CHANNEL_SECRET=你的 channel secret
-ADMIN_TOKEN=請換成一組長隨機字串
+LINE_CHANNEL_ACCESS_TOKEN=your LINE channel access token
+LINE_CHANNEL_SECRET=your LINE channel secret
+ADMIN_TOKEN=a long random value
 ```
 
-啟動後：
+Local checks:
+
+```bash
+curl http://localhost:3000/healthz
+curl http://localhost:3000/readyz
+```
+
+LINE webhook URL:
 
 ```text
-GET  /healthz
-GET  /readyz
-POST /webhook
-GET  /admin/metrics
-POST /admin/broadcast
+https://your-deployed-domain.example/webhook
 ```
 
-LINE Developers Console 的 Webhook URL 填部署網址加 `/webhook`，例如：
+## Reply Rules
 
-```text
-https://your-app.example.com/webhook
-```
-
-## 自動回覆規則
-
-修改 `data/replies.json` 即可調整關鍵字回覆。
+Edit [data/replies.json](data/replies.json).
 
 ```json
 {
@@ -62,68 +69,53 @@ https://your-app.example.com/webhook
 }
 ```
 
-支援：
-
-- `exact`：完全相同
-- `includes`：包含關鍵字
-- `regex`：正規表達式
-
-修改後先跑：
+After changing rules:
 
 ```bash
 npm run validate:rules
 npm test
 ```
 
-更多規則格式看 [docs/rules.md](docs/rules.md)。
+Rule notes are in [docs/rules.md](docs/rules.md).
 
-## 管理 API
+## Admin Endpoints
 
-所有 `/admin/*` endpoint 都需要：
+Admin endpoints require:
 
 ```text
 Authorization: Bearer <ADMIN_TOKEN>
 ```
 
-查看目前服務狀態：
+Metrics:
 
 ```bash
 curl -H "Authorization: Bearer $ADMIN_TOKEN" \
-  https://your-app.example.com/admin/metrics
+  https://your-deployed-domain.example/admin/metrics
 ```
 
-手動廣播：
+Manual broadcast:
 
 ```bash
-curl -X POST https://your-app.example.com/admin/broadcast \
+curl -X POST https://your-deployed-domain.example/admin/broadcast \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"message":"今天有新活動，歡迎查看。"}'
 ```
 
-本機也可以直接跑：
+CLI broadcast:
 
 ```bash
 npm run broadcast -- "今天有新活動，歡迎查看。"
 ```
 
-## GitHub Actions
+## Operations
 
-CI 會跑：
+Day-to-day notes:
 
-- JavaScript 語法檢查
-- `data/replies.json` 規則驗證
-- Node test runner 測試
+- keep `LOG_MESSAGE_TEXT=false` unless debugging locally
+- rotate `ADMIN_TOKEN` if it is ever pasted into a shared place
+- check `/readyz` after changing environment variables
+- run `npm run validate` before pushing changes
+- update [CHANGELOG.md](CHANGELOG.md) when user-visible behavior changes
 
-排程廣播需要到 GitHub repository 的 Settings -> Secrets and variables -> Actions 設定：
-
-- Secret：`LINE_CHANNEL_ACCESS_TOKEN`
-- Variable：`LINE_BROADCAST_TEXT`
-
-## 部署
-
-部署方式看 [docs/deployment.md](docs/deployment.md)。LINE 設定流程看 [docs/line-setup.md](docs/line-setup.md)。
-
-## 維護
-
-日常維護流程看 [MAINTAINING.md](MAINTAINING.md)。安全回報看 [SECURITY.md](SECURITY.md)。
+Deployment notes are in [docs/deployment.md](docs/deployment.md). LINE setup notes are in [docs/line-setup.md](docs/line-setup.md). The short maintenance checklist is in [MAINTAINING.md](MAINTAINING.md), and recent upkeep is tracked in [docs/maintenance-log.md](docs/maintenance-log.md).

@@ -1,4 +1,6 @@
-# 部署指南
+# Deployment Notes
+
+This project runs anywhere that supports Node.js 22. Render is the easiest path because `render.yaml` is already included, but Docker works too.
 
 ## 必要環境變數
 
@@ -12,17 +14,17 @@ LOG_MESSAGE_TEXT=false
 REPLY_TO_UNKNOWN=false
 ```
 
-`LOG_MESSAGE_TEXT=false` 是建議預設值，避免 logs 留下使用者訊息內容。
+Keep `LOG_MESSAGE_TEXT=false` in production. It prevents normal user messages from being written to logs.
 
 ## Render
 
-本專案包含 `render.yaml`。建立 Render Blueprint 後，補上以下環境變數：
+Use the included `render.yaml` as a Blueprint. After creating the service, add:
 
 - `LINE_CHANNEL_ACCESS_TOKEN`
 - `LINE_CHANNEL_SECRET`
 - `ADMIN_TOKEN`
 
-部署完成後，把 Render 網址加 `/webhook` 填回 LINE Developers Console。
+After deploy, put the Render domain plus `/webhook` into LINE Developers Console.
 
 ## Docker
 
@@ -31,7 +33,7 @@ docker build -t line-auto-helper .
 docker run --rm -p 3000:3000 --env-file .env line-auto-helper
 ```
 
-健康檢查：
+Health checks:
 
 ```bash
 curl http://localhost:3000/healthz
@@ -40,9 +42,20 @@ curl http://localhost:3000/readyz
 
 ## GitHub Actions 廣播
 
-排程廣播由 `.github/workflows/line-broadcast.yml` 負責。需要設定：
+Scheduled broadcast is handled by `.github/workflows/line-broadcast.yml`. Set:
 
 - Secret：`LINE_CHANNEL_ACCESS_TOKEN`
 - Variable：`LINE_BROADCAST_TEXT`
 
-GitHub Actions 的 cron 使用 UTC。檔案中的 `0 1 * * 1` 等於台灣時間每週一 09:00。
+GitHub Actions cron uses UTC. `0 1 * * 1` means Monday 09:00 in Taiwan.
+
+## Post-deploy Smoke Test
+
+```bash
+curl https://your-deployed-domain.example/healthz
+curl https://your-deployed-domain.example/readyz
+curl -H "Authorization: Bearer $ADMIN_TOKEN" \
+  https://your-deployed-domain.example/admin/metrics
+```
+
+Do not test broadcast against a production LINE account unless the message is safe to send to every friend of the official account.

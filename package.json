@@ -1,7 +1,7 @@
 {
   "name": "line-auto-helper",
   "version": "1.0.0",
-  "description": "Maintainable LINE Messaging API automation service with webhook replies, admin tooling, and scheduled broadcasts.",
+  "description": "Small LINE Messaging API service for keyword replies, health checks, and scheduled broadcasts.",
   "type": "module",
   "main": "src/server.js",
   "engines": {

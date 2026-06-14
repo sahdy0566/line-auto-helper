@@ -1,40 +1,55 @@
 # Maintaining
 
-## 每次修改規則
+This is a small service. Keep changes small enough that the next maintainer can read them in one sitting.
 
-```bash
-npm run validate:rules
-npm test
-```
-
-確認 `data/replies.json` 沒有超過 LINE 限制，也沒有壞掉的 regex。
-
-## 每次修改程式
+## Before Pushing
 
 ```bash
 npm run validate
 ```
 
-這會跑規則驗證、語法檢查與測試。
+This runs:
 
-## 部署後檢查
+- `npm run validate:rules`
+- `npm run lint`
+- `npm test`
+
+## When Editing Replies
+
+Most day-to-day changes should only touch `data/replies.json`.
+
+Checklist:
+
+- keep replies short
+- avoid private phone numbers, tokens, or internal notes
+- prefer `includes` unless exact wording matters
+- use `regex` only when the pattern is easy to explain
+- run `npm run validate:rules`
+
+## After Deployment
+
+Check:
 
 ```bash
-curl https://your-app.example.com/healthz
-curl https://your-app.example.com/readyz
+curl https://your-deployed-domain.example/healthz
+curl https://your-deployed-domain.example/readyz
 ```
 
-如果 `/readyz` 不是 `ok: true`，先檢查環境變數與 `data/replies.json`。
+If `/readyz` fails, check these first:
 
-## 查詢服務狀態
+- `LINE_CHANNEL_ACCESS_TOKEN`
+- `LINE_CHANNEL_SECRET`
+- `data/replies.json`
+
+## Light Monitoring
 
 ```bash
 curl -H "Authorization: Bearer $ADMIN_TOKEN" \
-  https://your-app.example.com/admin/metrics
+  https://your-deployed-domain.example/admin/metrics
 ```
 
-metrics 是 in-memory，服務重啟後會歸零。它適合輕量維運，不取代正式監控。
+Metrics are in-memory and reset on restart. That is fine for basic maintenance. Add persistent monitoring only when the bot becomes business-critical.
 
-## 發版紀錄
+## Releases
 
-更新使用者可見行為時，同步更新 `CHANGELOG.md`。
+Update `CHANGELOG.md` when behavior changes for users or operators. Skip changelog entries for typo-only edits.

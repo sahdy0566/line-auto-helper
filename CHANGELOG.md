@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Reworked public docs to be more direct and operational.
+- Added editor settings and Git attributes to keep text files consistent across Windows and GitHub.
+- Added a maintenance log with current project status and next operational steps.
+
 ## 1.0.0
 
 - 建立 LINE webhook 自動回覆服務。

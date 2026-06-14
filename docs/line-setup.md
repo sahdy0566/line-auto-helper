@@ -1,4 +1,6 @@
-# LINE Messaging API 設定
+# LINE Messaging API Setup
+
+These notes assume you already have a LINE Developers account and permission to create a Messaging API channel.
 
 ## 1. 建立 LINE Channel
 
@@ -24,7 +26,7 @@ LINE_CHANNEL_ACCESS_TOKEN=你的 token
 LINE_CHANNEL_SECRET=你的 secret
 ```
 
-本機測試 webhook 時，可以用 ngrok 或 cloudflared 把 `http://localhost:3000` 暫時公開，然後把 LINE webhook URL 設為：
+For local webhook testing, expose `http://localhost:3000` with ngrok or cloudflared, then set LINE webhook URL to:
 
 ```text
 https://你的公開網址/webhook
@@ -52,3 +54,10 @@ https://你的公開網址/webhook
 ## 5. 部署
 
 這個專案可以部署到支援 Node.js 22 的服務，例如 Render、Railway、Fly.io 或 Docker 主機。部署後把正式網址的 `/webhook` 填回 LINE Developers Console。
+
+## 6. 常見檢查
+
+- LINE 後台 webhook 要開啟。
+- Channel secret 要對應同一個 Messaging API channel。
+- Reply API 只接受 webhook 事件中的 `replyToken`，不能拿舊 token 重送。
+- Broadcast 會發給官方帳號的所有好友，正式帳號要小心測試。
