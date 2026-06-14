@@ -1,0 +1,33 @@
+{
+  "name": "line-auto-helper",
+  "version": "1.0.0",
+  "description": "GitHub-ready LINE Messaging API automation starter.",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "broadcast": "node scripts/broadcast.js",
+    "validate:env": "node scripts/validate-env.js",
+    "lint": "node scripts/check-syntax.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "line",
+    "line-bot",
+    "messaging-api",
+    "automation",
+    "github-actions"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@line/bot-sdk": "^11.0.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {}
+}
