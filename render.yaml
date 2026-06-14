@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: line-auto-helper
+    env: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: LOG_MESSAGE_TEXT
+        value: "false"
+      - key: REPLY_TO_UNKNOWN
+        value: "false"
+      - key: LINE_CHANNEL_ACCESS_TOKEN
+        sync: false
+      - key: LINE_CHANNEL_SECRET
+        sync: false
+      - key: ADMIN_TOKEN
+        sync: false

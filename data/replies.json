@@ -11,7 +11,7 @@
       "name": "報名表單",
       "match": "includes",
       "keywords": ["報名", "填表", "表單"],
-      "reply": "請填寫這份表單：https://example.com/form"
+      "reply": "目前報名資料由客服協助確認。請留下姓名、想報名的項目與方便聯絡的時間。"
     },
     {
       "name": "聯絡方式",

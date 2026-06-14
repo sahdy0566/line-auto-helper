@@ -1,16 +1,19 @@
 # LINE Auto Helper
 
-這是一個可以直接放上 GitHub 的 LINE Messaging API 自動化專案。
+LINE Auto Helper 是一個可部署、可維護的 LINE Messaging API 自動化服務。它不是只做 echo 的範例，而是把 webhook、規則檔、自動廣播、健康檢查、管理 API 和 GitHub Actions 放在同一個可長期維護的專案裡。
 
-它包含：
+## 功能
 
 - LINE webhook 自動回覆
 - `data/replies.json` 關鍵字規則
 - 新好友加入歡迎訊息
 - `/ping`、`/rules`、`選單` 指令
-- GitHub Actions CI
-- GitHub Actions 每週排程 LINE 廣播
-- Docker 部署設定
+- `/healthz` 與 `/readyz` 部署健康檢查
+- 受 `ADMIN_TOKEN` 保護的 `/admin/metrics`
+- 受 `ADMIN_TOKEN` 保護的 `/admin/broadcast`
+- 結構化 JSON logs，預設不記錄使用者訊息文字
+- GitHub Actions CI、規則檔驗證、排程 LINE 廣播
+- Docker 與 Render 部署範本
 
 ## 快速開始
 
@@ -18,31 +21,37 @@
 npm install
 cp .env.example .env
 npm run validate:env
+npm run validate:rules
 npm start
 ```
 
-編輯 `.env`，填入 LINE Developers Console 裡的：
+`.env` 至少要填：
 
 ```bash
 LINE_CHANNEL_ACCESS_TOKEN=你的 channel access token
 LINE_CHANNEL_SECRET=你的 channel secret
+ADMIN_TOKEN=請換成一組長隨機字串
 ```
 
-啟動後 webhook endpoint 是：
+啟動後：
 
 ```text
+GET  /healthz
+GET  /readyz
 POST /webhook
+GET  /admin/metrics
+POST /admin/broadcast
 ```
 
-如果部署網址是 `https://your-app.example.com`，LINE webhook URL 就填：
+LINE Developers Console 的 Webhook URL 填部署網址加 `/webhook`，例如：
 
 ```text
 https://your-app.example.com/webhook
 ```
 
-## 修改自動回覆
+## 自動回覆規則
 
-改 `data/replies.json` 就可以新增規則：
+修改 `data/replies.json` 即可調整關鍵字回覆。
 
 ```json
 {
@@ -53,42 +62,68 @@ https://your-app.example.com/webhook
 }
 ```
 
-支援三種比對：
+支援：
 
 - `exact`：完全相同
 - `includes`：包含關鍵字
 - `regex`：正規表達式
 
-## 手動廣播
+修改後先跑：
 
 ```bash
-npm run broadcast -- "今天有新活動，歡迎查看！"
+npm run validate:rules
+npm test
 ```
 
-需要環境變數：
+更多規則格式看 [docs/rules.md](docs/rules.md)。
+
+## 管理 API
+
+所有 `/admin/*` endpoint 都需要：
+
+```text
+Authorization: Bearer <ADMIN_TOKEN>
+```
+
+查看目前服務狀態：
 
 ```bash
-LINE_CHANNEL_ACCESS_TOKEN=你的 channel access token
+curl -H "Authorization: Bearer $ADMIN_TOKEN" \
+  https://your-app.example.com/admin/metrics
 ```
 
-## GitHub Actions 排程廣播
+手動廣播：
 
-到 repository 的 Settings -> Secrets and variables -> Actions 設定：
+```bash
+curl -X POST https://your-app.example.com/admin/broadcast \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"message":"今天有新活動，歡迎查看。"}'
+```
+
+本機也可以直接跑：
+
+```bash
+npm run broadcast -- "今天有新活動，歡迎查看。"
+```
+
+## GitHub Actions
+
+CI 會跑：
+
+- JavaScript 語法檢查
+- `data/replies.json` 規則驗證
+- Node test runner 測試
+
+排程廣播需要到 GitHub repository 的 Settings -> Secrets and variables -> Actions 設定：
 
 - Secret：`LINE_CHANNEL_ACCESS_TOKEN`
 - Variable：`LINE_BROADCAST_TEXT`
 
-預設 workflow 會在每週一 09:00 台灣時間廣播，也可以從 Actions 頁面手動輸入訊息執行。
+## 部署
 
-## 常用指令
+部署方式看 [docs/deployment.md](docs/deployment.md)。LINE 設定流程看 [docs/line-setup.md](docs/line-setup.md)。
 
-```bash
-npm run dev
-npm run lint
-npm test
-npm run broadcast -- "要廣播的文字"
-```
+## 維護
 
-## 更多設定
-
-完整 LINE 設定流程看 [docs/line-setup.md](docs/line-setup.md)。
+日常維護流程看 [MAINTAINING.md](MAINTAINING.md)。安全回報看 [SECURITY.md](SECURITY.md)。

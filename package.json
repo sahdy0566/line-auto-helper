@@ -1,7 +1,7 @@
 {
   "name": "line-auto-helper",
   "version": "1.0.0",
-  "description": "GitHub-ready LINE Messaging API automation starter.",
+  "description": "Maintainable LINE Messaging API automation service with webhook replies, admin tooling, and scheduled broadcasts.",
   "type": "module",
   "main": "src/server.js",
   "engines": {
@@ -12,6 +12,8 @@
     "dev": "node --watch src/server.js",
     "broadcast": "node scripts/broadcast.js",
     "validate:env": "node scripts/validate-env.js",
+    "validate:rules": "node scripts/validate-rules.js",
+    "validate": "npm run validate:rules && npm run lint && npm test",
     "lint": "node scripts/check-syntax.js",
     "test": "node --test"
   },

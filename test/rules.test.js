@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
+import { validateRulesConfig } from '../src/rule-validation.js';
 import { findMatchingRule, resolveReply, toLineMessages } from '../src/rules.js';
 
 const rulesConfig = {
@@ -48,4 +49,26 @@ test('resolveReply can return the default reply', () => {
 test('toLineMessages limits replies to five messages', () => {
   const messages = toLineMessages(['1', '2', '3', '4', '5', '6']);
   assert.equal(messages.length, 5);
+});
+
+test('validateRulesConfig rejects invalid regex rules', () => {
+  const result = validateRulesConfig({
+    rules: [
+      {
+        name: 'bad regex',
+        match: 'regex',
+        keywords: ['['],
+        reply: 'broken'
+      }
+    ]
+  });
+
+  assert.equal(result.ok, false);
+  assert.match(result.errors.join('\n'), /not a valid regex/);
+});
+
+test('validateRulesConfig accepts the fixture rules', () => {
+  const result = validateRulesConfig(rulesConfig);
+  assert.equal(result.ok, true);
+  assert.equal(result.ruleCount, 3);
 });

@@ -24,5 +24,8 @@ jobs:
       - name: Check syntax
         run: npm run lint
 
+      - name: Validate reply rules
+        run: npm run validate:rules
+
       - name: Run tests
         run: npm test
