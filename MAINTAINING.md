@@ -53,3 +53,9 @@ Metrics are in-memory and reset on restart. That is fine for basic maintenance. 
 ## Releases
 
 Update `CHANGELOG.md` when behavior changes for users or operators. Skip changelog entries for typo-only edits.
+
+## Dependencies
+
+Patch and minor updates can be handled during routine maintenance after `npm run validate` passes.
+
+Major updates should get their own branch. For this project, Express 5 is the main upgrade to test carefully because request parsing and middleware behavior are part of the webhook path.

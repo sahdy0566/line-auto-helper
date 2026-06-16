@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Aligned `express` and `dotenv` dependency ranges with the current patch/minor versions used by the lockfile.
+- Recorded the 2026-06-16 maintenance pass, including audit status and major-upgrade notes.
 - Reworked public docs to be more direct and operational.
 - Added editor settings and Git attributes to keep text files consistent across Windows and GitHub.
 - Added a maintenance log with current project status and next operational steps.
