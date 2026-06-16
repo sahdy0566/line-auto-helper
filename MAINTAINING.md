@@ -6,6 +6,7 @@ This is a small service. Keep changes small enough that the next maintainer can 
 
 ```bash
 npm run validate
+npm run smoke
 ```
 
 This runs:
@@ -13,6 +14,10 @@ This runs:
 - `npm run validate:rules`
 - `npm run lint`
 - `npm test`
+
+`npm run smoke` starts the server with test environment variables and checks the public health endpoints plus admin auth behavior.
+
+CI runs the same smoke check after the unit tests.
 
 ## When Editing Replies
 

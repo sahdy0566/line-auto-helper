@@ -15,7 +15,8 @@
     "validate:rules": "node scripts/validate-rules.js",
     "validate": "npm run validate:rules && npm run lint && npm test",
     "lint": "node scripts/check-syntax.js",
-    "test": "node --test"
+    "smoke": "node scripts/smoke-test.js",
+    "test": "node scripts/run-tests.js"
   },
   "keywords": [
     "line",

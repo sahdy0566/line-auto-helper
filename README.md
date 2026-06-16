@@ -116,6 +116,7 @@ Day-to-day notes:
 - rotate `ADMIN_TOKEN` if it is ever pasted into a shared place
 - check `/readyz` after changing environment variables
 - run `npm run validate` before pushing changes
+- run `npm run smoke` when server startup or admin endpoints change
 - update [CHANGELOG.md](CHANGELOG.md) when user-visible behavior changes
 
 Deployment notes are in [docs/deployment.md](docs/deployment.md). LINE setup notes are in [docs/line-setup.md](docs/line-setup.md). The short maintenance checklist is in [MAINTAINING.md](MAINTAINING.md), and recent upkeep is tracked in [docs/maintenance-log.md](docs/maintenance-log.md).
