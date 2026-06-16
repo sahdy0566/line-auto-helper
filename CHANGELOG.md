@@ -7,6 +7,7 @@
 - Added `npm run smoke` for a lightweight server startup and endpoint authorization check.
 - Added a cross-platform test runner so smoke checks stay explicit.
 - Added the smoke test to CI.
+- Added `.dockerignore` and verified the Docker image locally.
 - Reworked public docs to be more direct and operational.
 - Added editor settings and Git attributes to keep text files consistent across Windows and GitHub.
 - Added a maintenance log with current project status and next operational steps.

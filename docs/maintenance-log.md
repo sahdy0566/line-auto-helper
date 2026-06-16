@@ -10,7 +10,10 @@
 - Added a cross-platform test runner so `npm test` only executes `*.test.js` files under `test/`.
 - Added the smoke test to GitHub Actions CI.
 - Ran `npm ci` successfully to confirm the lockfile can rebuild a clean install.
-- Docker build was not run locally because Docker CLI is not installed on this machine.
+- Installed Docker Desktop and verified Docker CLI/daemon locally.
+- Built `line-auto-helper:maintenance` successfully.
+- Ran the Docker image and checked `/healthz`, `/readyz`, unauthorized admin access, and authorized `/admin/metrics`.
+- Added `.dockerignore` so Docker build context does not include local dependencies or Git metadata.
 
 Notes for next maintenance pass:
 

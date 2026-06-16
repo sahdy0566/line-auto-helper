@@ -120,3 +120,10 @@ Day-to-day notes:
 - update [CHANGELOG.md](CHANGELOG.md) when user-visible behavior changes
 
 Deployment notes are in [docs/deployment.md](docs/deployment.md). LINE setup notes are in [docs/line-setup.md](docs/line-setup.md). The short maintenance checklist is in [MAINTAINING.md](MAINTAINING.md), and recent upkeep is tracked in [docs/maintenance-log.md](docs/maintenance-log.md).
+
+Docker quick check:
+
+```bash
+docker build -t line-auto-helper:local .
+docker run --rm -p 3000:3000 --env-file .env line-auto-helper:local
+```
