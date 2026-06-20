@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Updated `@line/bot-sdk` to `11.0.2`.
+- Recorded the 2026-06-20 background maintenance pass.
 - Aligned `express` and `dotenv` dependency ranges with the current patch/minor versions used by the lockfile.
 - Recorded the 2026-06-16 maintenance pass, including audit status and major-upgrade notes.
 - Added `npm run smoke` for a lightweight server startup and endpoint authorization check.

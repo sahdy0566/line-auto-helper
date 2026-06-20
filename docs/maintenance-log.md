@@ -1,5 +1,15 @@
 # Maintenance Log
 
+## 2026-06-20
+
+- Updated `@line/bot-sdk` from `11.0.1` to `11.0.2`.
+- Ran `npm ci` to confirm the lockfile can rebuild a clean install.
+- Ran `npm run validate`; rule validation, syntax check, and tests passed.
+- Ran `npm run smoke`; local server startup and admin authorization checks passed.
+- Ran `npm audit --omit=dev --audit-level=low`; no vulnerabilities were reported.
+- Checked outdated packages. `express` 5 and `dotenv` 17 are still major-version upgrades and were left for a separate migration branch.
+- Docker CLI is installed, but the Docker daemon was not running in this background session. Docker Desktop was not launched to avoid opening a visible app window.
+
 ## 2026-06-16
 
 - Ran the full local validation suite: rule validation, syntax check, and tests all passed.
