@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Updated GitHub Actions workflow dependencies: `actions/checkout` to 7 and `actions/setup-node` to 6.
+- Recorded the 2026-06-27 background maintenance pass.
 - Updated `@line/bot-sdk` to `11.0.2`.
 - Recorded the 2026-06-20 background maintenance pass.
 - Aligned `express` and `dotenv` dependency ranges with the current patch/minor versions used by the lockfile.

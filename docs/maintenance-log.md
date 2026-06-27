@@ -1,5 +1,13 @@
 # Maintenance Log
 
+## 2026-06-27
+
+- Fetched GitHub updates and found Dependabot maintenance branches.
+- Applied GitHub Actions updates from Dependabot: `actions/checkout` 4 -> 7 and `actions/setup-node` 4 -> 6.
+- Ran `npm ci`, `npm run validate`, `npm run smoke`, and `npm audit --omit=dev --audit-level=low`; all passed.
+- Checked npm outdated packages. `express` 5 and `dotenv` 17 are still major-version migrations and were not mixed into this routine update.
+- Docker CLI is installed (`Docker 29.5.3`), but the Docker daemon was not running. Docker Desktop was not launched because this pass was requested to stay in the background.
+
 ## 2026-06-20
 
 - Updated `@line/bot-sdk` from `11.0.1` to `11.0.2`.
